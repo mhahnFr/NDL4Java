@@ -25,6 +25,7 @@ import mhahnFr.NDL.impl.Constants;
 
 import java.lang.foreign.FunctionDescriptor;
 import java.lang.foreign.Linker;
+import java.lang.foreign.SymbolLookup;
 import java.lang.foreign.ValueLayout;
 import java.lang.invoke.MethodHandle;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public final class NDL {
     private NDL() {
         System.loadLibrary(Constants.LIBRARY_NAME);
         final var linker = Linker.nativeLinker();
-        final var lookup = linker.defaultLookup();
+        final var lookup = SymbolLookup.loaderLookup();
         final var address = lookup.find("ndl_queryDarkMode").get();
         final var descriptor = FunctionDescriptor.of(ValueLayout.JAVA_BOOLEAN);
         ndlQueryDarkMode = linker.downcallHandle(address, descriptor);
