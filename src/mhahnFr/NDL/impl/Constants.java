@@ -19,7 +19,7 @@
  * along with NDL4Java.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mhahnFr.NDL;
+package mhahnFr.NDL.impl;
 
 /**
  * This class contains the constant values of the library.
@@ -31,5 +31,5 @@ public abstract class Constants {
     private Constants() {}
 
     /** The name of the native library without extension. */
-    public static final String LIBRARY_NAME = "NDL-native";
+    public static final String LIBRARY_NAME = "ndl";
 }
