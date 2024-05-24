@@ -42,4 +42,15 @@ java {
     withJavadocJar()
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
+
 // TODO: Publishing
