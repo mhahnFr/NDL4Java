@@ -21,6 +21,12 @@
 
 package mhahnFr.NDL;
 
+import mhahnFr.NDL.impl.Constants;
+
+import java.lang.foreign.FunctionDescriptor;
+import java.lang.foreign.Linker;
+import java.lang.foreign.ValueLayout;
+import java.lang.invoke.MethodHandle;
 import java.util.ArrayList;
 
 /**
@@ -30,11 +36,19 @@ import java.util.ArrayList;
  * @since 10.05.24
  */
 public final class NDL {
+    private final MethodHandle ndlQueryDarkMode;
     private final ArrayList<DarkModeCallback> callbacks = new ArrayList<>();
 
     private static NDL instance;
 
-    private NDL() {}
+    private NDL() {
+        System.loadLibrary(Constants.LIBRARY_NAME);
+        final var linker = Linker.nativeLinker();
+        final var lookup = linker.defaultLookup();
+        final var address = lookup.find("ndl_queryDarkMode").get();
+        final var descriptor = FunctionDescriptor.of(ValueLayout.JAVA_BOOLEAN);
+        ndlQueryDarkMode = linker.downcallHandle(address, descriptor);
+    }
 
     private void registerCallbackImpl(final DarkModeCallback callback) {
         // TODO: Implement
@@ -46,9 +60,8 @@ public final class NDL {
         callbacks.remove(callback);
     }
 
-    private boolean queryDarkModeImpl() {
-        // TODO: Implement
-        return false;
+    private boolean queryDarkModeImpl() throws Throwable {
+        return (boolean) ndlQueryDarkMode.invokeExact();
     }
 
     private static NDL getInstance() {
@@ -67,6 +80,10 @@ public final class NDL {
     }
 
     public static boolean queryDarkMode() {
-        return getInstance().queryDarkModeImpl();
+        try {
+            return getInstance().queryDarkModeImpl();
+        } catch (final Throwable e) {
+            return false;
+        }
     }
 }
