@@ -21,21 +21,52 @@
 
 package mhahnFr.NDL;
 
+import java.util.ArrayList;
+
 /**
  * This class acts as main class of this project.
  *
  * @author mhahnFr
  * @since 10.05.24
  */
-public abstract class NDL {
+public final class NDL {
+    private final ArrayList<DarkModeCallback> callbacks = new ArrayList<>();
+
+    private static NDL instance;
+
     private NDL() {}
 
-    static {
-        System.loadLibrary(Constants.LIBRARY_NAME);
-        // TODO: Initialize
+    private void registerCallbackImpl(final DarkModeCallback callback) {
+        // TODO: Implement
+        callbacks.add(callback);
     }
 
-    public static void hello() {
-        System.out.println("Hello");
+    private void deregisterCallbackImpl(final DarkModeCallback callback) {
+        // TODO: Implement
+        callbacks.remove(callback);
+    }
+
+    private boolean queryDarkModeImpl() {
+        // TODO: Implement
+        return false;
+    }
+
+    private static NDL getInstance() {
+        if (instance == null) {
+            instance = new NDL();
+        }
+        return instance;
+    }
+
+    public static void registerCallback(final DarkModeCallback callback) {
+        getInstance().registerCallbackImpl(callback);
+    }
+
+    public static void deregisterCallback(final DarkModeCallback callback) {
+        getInstance().deregisterCallbackImpl(callback);
+    }
+
+    public static boolean queryDarkMode() {
+        return getInstance().queryDarkModeImpl();
     }
 }
