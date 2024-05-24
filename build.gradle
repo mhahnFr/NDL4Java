@@ -36,6 +36,9 @@ sourceSets {
 }
 
 java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(22)
+    }
     withJavadocJar()
 }
 
