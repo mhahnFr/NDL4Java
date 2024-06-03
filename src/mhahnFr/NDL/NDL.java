@@ -22,6 +22,7 @@
 package mhahnFr.NDL;
 
 import mhahnFr.NDL.impl.Constants;
+import mhahnFr.NDL.impl.PrivateApi;
 
 import java.lang.foreign.*;
 import java.lang.invoke.MethodHandle;
@@ -60,6 +61,7 @@ public final class NDL {
         }
     }
 
+    @PrivateApi
     private void ndlCallback() {
         for (final var cb : callbacks) {
             cb.darkModeChanged();
@@ -120,14 +122,17 @@ public final class NDL {
         return instance;
     }
 
+    @PublicApi
     public static void registerCallback(final DarkModeCallback callback) {
         getInstance().registerCallbackImpl(callback);
     }
 
+    @PublicApi
     public static void deregisterCallback(final DarkModeCallback callback) {
         getInstance().deregisterCallbackImpl(callback);
     }
 
+    @PublicApi
     public static boolean queryDarkMode() {
         return getInstance().queryDarkModeImpl();
     }
