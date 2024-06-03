@@ -76,27 +76,41 @@ public final class NDL {
     private static MethodHandle loadNDLFunction(final String name, final ValueLayout... args) {
         final var linker = Linker.nativeLinker();
         final var lookup = SymbolLookup.loaderLookup();
-        final var address = lookup.find(name).get();
+        final var address = lookup.find(name)
+                .orElseThrow(() -> new NDLException("NDL4Java: Required function '" + name
+                        + "' not found; is the library '" + Constants.LIBRARY_NAME + "' loaded?"));
         final var descriptor = FunctionDescriptor.of(ValueLayout.JAVA_BOOLEAN, args);
         return linker.downcallHandle(address, descriptor);
     }
 
-    private void registerCallbackImpl(final DarkModeCallback callback) throws Throwable {
+    private void registerCallbackImpl(final DarkModeCallback callback) {
         if (callbacks.isEmpty()) {
-            final var _ = (boolean) ndlRegisterCallback.invokeExact(this.callback);
+            try {
+                final var _ = (boolean) ndlRegisterCallback.invokeExact(this.callback);
+            } catch (final Throwable e) {
+                throw new NDLException("NDL4Java: Caught unexpected error", e);
+            }
         }
         callbacks.add(callback);
     }
 
-    private void deregisterCallbackImpl(final DarkModeCallback callback) throws Throwable {
+    private void deregisterCallbackImpl(final DarkModeCallback callback) {
         callbacks.remove(callback);
         if (callbacks.isEmpty()) {
-            final var _ = (boolean) ndlDeregisterCallback.invokeExact(this.callback);
+            try {
+                final var _ = (boolean) ndlDeregisterCallback.invokeExact(this.callback);
+            } catch (final Throwable e) {
+                throw new NDLException("NDL4Java: Caught unexpected error", e);
+            }
         }
     }
 
-    private boolean queryDarkModeImpl() throws Throwable {
-        return (boolean) ndlQueryDarkMode.invokeExact();
+    private boolean queryDarkModeImpl() {
+        try {
+            return (boolean) ndlQueryDarkMode.invokeExact();
+        } catch (final Throwable e) {
+            throw new NDLException("NDL4Java: Caught unexpected error", e);
+        }
     }
 
     private static NDL getInstance() {
@@ -106,19 +120,15 @@ public final class NDL {
         return instance;
     }
 
-    public static void registerCallback(final DarkModeCallback callback) throws Throwable {
+    public static void registerCallback(final DarkModeCallback callback) {
         getInstance().registerCallbackImpl(callback);
     }
 
-    public static void deregisterCallback(final DarkModeCallback callback) throws Throwable {
+    public static void deregisterCallback(final DarkModeCallback callback) {
         getInstance().deregisterCallbackImpl(callback);
     }
 
     public static boolean queryDarkMode() {
-        try {
-            return getInstance().queryDarkModeImpl();
-        } catch (final Throwable e) {
-            return false;
-        }
+        return getInstance().queryDarkModeImpl();
     }
 }
