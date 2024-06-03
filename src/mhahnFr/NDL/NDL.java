@@ -23,11 +23,10 @@ package mhahnFr.NDL;
 
 import mhahnFr.NDL.impl.Constants;
 
-import java.lang.foreign.FunctionDescriptor;
-import java.lang.foreign.Linker;
-import java.lang.foreign.SymbolLookup;
-import java.lang.foreign.ValueLayout;
+import java.lang.foreign.*;
 import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.ArrayList;
 
 /**
@@ -40,6 +39,7 @@ public final class NDL {
     private final MethodHandle ndlQueryDarkMode;
     private final MethodHandle ndlRegisterCallback;
     private final MethodHandle ndlDeregisterCallback;
+    private final MemorySegment callback;
     private final ArrayList<DarkModeCallback> callbacks = new ArrayList<>();
 
     private static NDL instance;
@@ -50,6 +50,24 @@ public final class NDL {
         ndlQueryDarkMode = loadNDLFunction("ndl_queryDarkMode");
         ndlRegisterCallback = loadNDLFunction("ndl_registerCallback", ValueLayout.ADDRESS);
         ndlDeregisterCallback = loadNDLFunction("ndl_deregisterCallback", ValueLayout.ADDRESS);
+
+        try {
+            callback = loadCallback();
+        } catch (NoSuchMethodException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void ndlCallback() {
+        // TODO: Implement
+        System.out.println("CB");
+    }
+
+    private MemorySegment loadCallback() throws NoSuchMethodException, IllegalAccessException {
+        final var linker = Linker.nativeLinker();
+        final var handle = MethodHandles.lookup().bind(this, "ndlCallback", MethodType.methodType(void.class));
+        final var nativeDescription = FunctionDescriptor.ofVoid();
+        return linker.upcallStub(handle, nativeDescription, Arena.ofAuto());
     }
 
     private static MethodHandle loadNDLFunction(final String name, final ValueLayout... args) {
