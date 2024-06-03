@@ -38,17 +38,26 @@ import java.util.ArrayList;
  */
 public final class NDL {
     private final MethodHandle ndlQueryDarkMode;
+    private final MethodHandle ndlRegisterCallback;
+    private final MethodHandle ndlDeregisterCallback;
     private final ArrayList<DarkModeCallback> callbacks = new ArrayList<>();
 
     private static NDL instance;
 
     private NDL() {
         System.loadLibrary(Constants.LIBRARY_NAME);
+
+        ndlQueryDarkMode = loadNDLFunction("ndl_queryDarkMode");
+        ndlRegisterCallback = loadNDLFunction("ndl_registerCallback", ValueLayout.ADDRESS);
+        ndlDeregisterCallback = loadNDLFunction("ndl_deregisterCallback", ValueLayout.ADDRESS);
+    }
+
+    private static MethodHandle loadNDLFunction(final String name, final ValueLayout... args) {
         final var linker = Linker.nativeLinker();
         final var lookup = SymbolLookup.loaderLookup();
-        final var address = lookup.find("ndl_queryDarkMode").get();
-        final var descriptor = FunctionDescriptor.of(ValueLayout.JAVA_BOOLEAN);
-        ndlQueryDarkMode = linker.downcallHandle(address, descriptor);
+        final var address = lookup.find(name).get();
+        final var descriptor = FunctionDescriptor.of(ValueLayout.JAVA_BOOLEAN, args);
+        return linker.downcallHandle(address, descriptor);
     }
 
     private void registerCallbackImpl(final DarkModeCallback callback) {
