@@ -29,6 +29,8 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.ArrayList;
 
+// FIXME: Only save in UI thread!
+
 /**
  * This class acts as main class of this project.
  *
@@ -78,14 +80,19 @@ public final class NDL {
         return linker.downcallHandle(address, descriptor);
     }
 
-    private void registerCallbackImpl(final DarkModeCallback callback) {
-        // TODO: Implement
+    private void registerCallbackImpl(final DarkModeCallback callback) throws Throwable {
+        System.out.println(callbacks.isEmpty());
+        if (callbacks.isEmpty()) {
+            final var _ = (boolean) ndlRegisterCallback.invokeExact(this.callback);
+        }
         callbacks.add(callback);
     }
 
-    private void deregisterCallbackImpl(final DarkModeCallback callback) {
-        // TODO: Implement
+    private void deregisterCallbackImpl(final DarkModeCallback callback) throws Throwable {
         callbacks.remove(callback);
+        if (callbacks.isEmpty()) {
+            final var _ = (boolean) ndlDeregisterCallback.invokeExact(this.callback);
+        }
     }
 
     private boolean queryDarkModeImpl() throws Throwable {
@@ -99,11 +106,11 @@ public final class NDL {
         return instance;
     }
 
-    public static void registerCallback(final DarkModeCallback callback) {
+    public static void registerCallback(final DarkModeCallback callback) throws Throwable {
         getInstance().registerCallbackImpl(callback);
     }
 
-    public static void deregisterCallback(final DarkModeCallback callback) {
+    public static void deregisterCallback(final DarkModeCallback callback) throws Throwable {
         getInstance().deregisterCallbackImpl(callback);
     }
 
