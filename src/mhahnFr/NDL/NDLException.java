@@ -21,11 +21,28 @@
 
 package mhahnFr.NDL;
 
+/**
+ * This class defines the {@link RuntimeException exception} for NDL4Java.
+ *
+ * @author mhahnFr
+ * @since 03.06.24
+ */
 public class NDLException extends RuntimeException {
+    /**
+     * Creates an exception with the given message.
+     *
+     * @param message the message of the exception
+     */
     NDLException(final String message) {
         super(message);
     }
 
+    /**
+     * Creates an exception with the given message and cause.
+     *
+     * @param message the message of the exception
+     * @param cause the underlying cause for this exception
+     */
     NDLException(final String message, final Throwable cause) {
         super(message, cause);
     }

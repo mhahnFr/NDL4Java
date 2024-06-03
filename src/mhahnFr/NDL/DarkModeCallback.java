@@ -21,7 +21,16 @@
 
 package mhahnFr.NDL;
 
+/**
+ * This interface defines the callback for the Native Dark mode Listener.
+ *
+ * @author mhahnFr
+ * @since 24.05.24
+ */
 @FunctionalInterface
 public interface DarkModeCallback {
+    /**
+     * This method is called when the operating system changes its theme.
+     */
     void darkModeChanged();
 }
