@@ -30,8 +30,6 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.ArrayList;
 
-// FIXME: Only save in UI thread!
-
 /**
  * This class acts as main class of this project.
  *
@@ -56,8 +54,8 @@ public final class NDL {
 
         try {
             callback = loadCallback();
-        } catch (NoSuchMethodException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (final NoSuchMethodException | IllegalAccessException e) {
+            throw new NDLException("NDL4Java: Could not create native callback", e);
         }
     }
 
@@ -87,10 +85,14 @@ public final class NDL {
 
     private void registerCallbackImpl(final DarkModeCallback callback) {
         if (callbacks.isEmpty()) {
+            final boolean result;
             try {
-                final var _ = (boolean) ndlRegisterCallback.invokeExact(this.callback);
+                result = (boolean) ndlRegisterCallback.invokeExact(this.callback);
             } catch (final Throwable e) {
                 throw new NDLException("NDL4Java: Caught unexpected error", e);
+            }
+            if (!result) {
+                throw new NDLException("NDL4Java: Could not register native callback");
             }
         }
         callbacks.add(callback);
@@ -99,10 +101,14 @@ public final class NDL {
     private void deregisterCallbackImpl(final DarkModeCallback callback) {
         callbacks.remove(callback);
         if (callbacks.isEmpty()) {
+            final boolean result;
             try {
-                final var _ = (boolean) ndlDeregisterCallback.invokeExact(this.callback);
+                result = (boolean) ndlDeregisterCallback.invokeExact(this.callback);
             } catch (final Throwable e) {
                 throw new NDLException("NDL4Java: Caught unexpected error", e);
+            }
+            if (!result) {
+                throw new NDLException("NDL4Java: Failed to deregister native callback");
             }
         }
     }
