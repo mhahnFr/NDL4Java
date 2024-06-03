@@ -19,16 +19,10 @@
  * along with NDL4Java.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mhahnFr.NDL.impl;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 /**
- * This annotation marks symbols that are necessary for the private implementation of the library.
+ * This package contains the private implementation parts of the library.
  *
  * @author mhahnFr
- * @since 03.06.24
+ * @since 10.05.24
  */
-@Retention(RetentionPolicy.SOURCE)
-public @interface PrivateApi {}
+package mhahnFr.NDL.impl;

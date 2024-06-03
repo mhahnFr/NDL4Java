@@ -24,5 +24,11 @@ package mhahnFr.NDL;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/**
+ * This annotation marks symbols that are exposed as public API.
+ *
+ * @author mhahnFr
+ * @since 03.06.24
+ */
 @Retention(RetentionPolicy.SOURCE)
 public @interface PublicApi {}
