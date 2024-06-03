@@ -61,8 +61,9 @@ public final class NDL {
     }
 
     private void ndlCallback() {
-        // TODO: Implement
-        System.out.println("CB");
+        for (final var cb : callbacks) {
+            cb.darkModeChanged();
+        }
     }
 
     private MemorySegment loadCallback() throws NoSuchMethodException, IllegalAccessException {
@@ -81,7 +82,6 @@ public final class NDL {
     }
 
     private void registerCallbackImpl(final DarkModeCallback callback) throws Throwable {
-        System.out.println(callbacks.isEmpty());
         if (callbacks.isEmpty()) {
             final var _ = (boolean) ndlRegisterCallback.invokeExact(this.callback);
         }
