@@ -21,4 +21,8 @@
 
 package mhahnFr.NDL.impl;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@Retention(RetentionPolicy.SOURCE)
 public @interface PrivateApi {}
