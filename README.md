@@ -117,7 +117,7 @@ public class Main {
 ```
 Compile as follows:
 ```shell
-javac -cp <path/to/NDL4ava>/NDL4Java-0.1.jar Main.java
+javac -cp <path/to/NDL4Java>/NDL4Java-0.1.jar Main.java
 ```
 And run as follows:
 ```shell
