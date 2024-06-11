@@ -232,4 +232,28 @@ public final class NDL {
     public static boolean queryDarkMode() {
         return getInstance().queryDarkModeImpl();
     }
+
+    /**
+     * Returns whether NDL is available on this platform.
+     *
+     * @return whether NDL is available on this platform
+     * @see #ifAvailable(Runnable)
+     */
+    @PublicApi
+    public static boolean isAvailable() {
+        return System.getProperty("os.name").toLowerCase().contains("mac");
+    }
+
+    /**
+     * Executes the given {@link Runnable} if NDL is available on this platform.
+     *
+     * @param runnable the runnable to be run if NDL is available
+     * @see #isAvailable()
+     */
+    @PublicApi
+    public static void ifAvailable(final Runnable runnable) {
+        if (isAvailable()) {
+            runnable.run();
+        }
+    }
 }
