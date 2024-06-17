@@ -10,6 +10,8 @@ Specify the path to the native NDL library when launching the JVM: `-Djava.libra
 To enable warning-free access to the restricted JVM methods that are required, specify additionally:
 `--enable-native-access=ALL-UNNAMED`
 
+Make sure you have installed a Java Development Kit in version 22 or higher to use this library.
+
 ### Installation
 The following sections show how to use NDL4Java as dependency using the build system Gradle.
 
@@ -29,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'mhahnfr:ndl4java:0.1'
+    implementation 'mhahnfr:ndl4java:0.2'
 }
 ```
 
@@ -47,7 +49,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'mhahnfr:ndl4java:0.1'
+    implementation 'mhahnfr:ndl4java:0.2'
 }
 ```
 
@@ -117,11 +119,11 @@ public class Main {
 ```
 Compile as follows:
 ```shell
-javac -cp <path/to/NDL4Java>/NDL4Java-0.1.jar Main.java
+javac -cp <path/to/NDL4Java>/NDL4Java-0.2.jar Main.java
 ```
 And run as follows:
 ```shell
-java -cp .:<path/to/NDL4Java>/NDL4Java-0.1.jar -Djava.library.path=<path/to/NDL> --enable-native-access=ALL-UNNAMED Main
+java -cp .:<path/to/NDL4Java>/NDL4Java-0.2.jar -Djava.library.path=<path/to/NDL> --enable-native-access=ALL-UNNAMED Main
 ```
 
 
