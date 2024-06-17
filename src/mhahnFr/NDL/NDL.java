@@ -238,8 +238,9 @@ public final class NDL {
      *
      * @return whether NDL is available on this platform
      * @see #ifAvailable(Runnable)
+     * @deprecated Replaced by {@link #couldLoad()}.
      */
-    @PublicApi
+    @Deprecated
     public static boolean isAvailable() {
         return System.getProperty("os.name").toLowerCase().contains("mac");
     }
@@ -248,12 +249,30 @@ public final class NDL {
      * Executes the given {@link Runnable} if NDL is available on this platform.
      *
      * @param runnable the runnable to be run if NDL is available
-     * @see #isAvailable()
+     * @see #couldLoad()
      */
     @PublicApi
     public static void ifAvailable(final Runnable runnable) {
-        if (isAvailable()) {
+        if (couldLoad()) {
             runnable.run();
         }
+    }
+
+    /**
+     * Checks whether the native NDL library could be loaded. If this function
+     * returns {@code false}, the other API functions will probably throw
+     * exceptions as well.
+     *
+     * @return whether the native NDL library was loaded successfully
+     * @see #ifAvailable(Runnable)
+     */
+    @PublicApi
+    public static boolean couldLoad() {
+        try {
+            final var _ = getInstance();
+        } catch (final UnsatisfiedLinkError e) {
+            return false;
+        }
+        return true;
     }
 }
